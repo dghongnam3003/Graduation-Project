@@ -9,23 +9,23 @@ use crate::{
 #[instruction(bump: u8)]
 pub struct Init<'info> {
   #[account(mut)]
-  pub admin: Singer<'info>,
+  pub admin: Signer<'info>,
 
   #[account(
     init,
     seeds = [CONFIG_SEED],
-    bump = bump,
+    bump,
     payer = admin,
-    space = config::LEN,
+    space = Config::LEN,
   )]
   pub config: Account<'info, Config>,
 
   #[account(
     init,
     seeds = [TREASURY_SEED],
-    bump = bump,
+    bump,
     payer = admin,
-    space = treasury::LEN,
+    space = Treasury::LEN,
   )]
   pub treasury: Account<'info, Treasury>,
 

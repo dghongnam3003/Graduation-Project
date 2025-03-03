@@ -5,6 +5,7 @@ use crate::{
   errors::CustomError,
   state::{Campaign, Config, Treasury},
   utils::withdraw_sol,
+  events::ClaimedFundEvent,
 };
 
 #[derive(Accounts)]
@@ -82,6 +83,13 @@ pub fn claim_fund_raised(ctx: Context<ClaimFundRaised>) -> Result<()> {
     &ctx.accounts.treasury.to_account_info(),
     fee,
   )?;
+
+  emit!(ClaimedFundEvent {
+    creator: *ctx.accounts.creator.key,
+    campaign_index: campaign_account.index,
+    claimed_amount: deposited_balance.checked_sub(fee).unwrap(),
+    timestamp: now,
+  });
 
   Ok(())
 }

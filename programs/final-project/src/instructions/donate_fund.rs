@@ -1,6 +1,12 @@
 use anchor_lang::prelude::*;
 
-use crate::{constants::CAMPAIGN_SEED, errors::CustomError, state::Campaign, utils::deposit_sol};
+use crate::{
+  constants::CAMPAIGN_SEED, 
+  errors::CustomError, 
+  state::Campaign, 
+  utils::deposit_sol,
+  events::DonatedFundEvent
+};
 
 #[derive(Accounts)]
 #[instruction(creator: Pubkey, campaign_index: u64)]
@@ -61,6 +67,12 @@ pub fn donate_fund(
     amount,
     &ctx.accounts.system_program,
   )?;
+
+  emit!(DonatedFundEvent {
+    campaign_index,
+    donated_amount: amount,
+    timestamp: now,
+  });
 
   Ok(())
 }

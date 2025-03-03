@@ -5,6 +5,7 @@ use crate::{
   errors::CustomError,
   state::{Campaign, Config, Creator},
   utils::deposit_sol,
+  events::CreatedCampaignEvent,
 };
 
 #[derive(Accounts)]
@@ -91,6 +92,18 @@ pub fn init_campaign(
     config.initial_deposit_amount,
     &ctx.accounts.system_program,
   )?;
+
+  // Emit event
+  emit!(CreatedCampaignEvent {
+    creator: *ctx.accounts.creator.key,
+    campaign_index: creator_account.last_campaign_index,
+    name,
+    symbol,
+    uri,
+    deposit_deadline,
+    trade_deadline,
+    timestamp: now,
+  });
 
   Ok(())
 }
