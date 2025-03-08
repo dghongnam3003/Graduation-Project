@@ -3,6 +3,7 @@ use anchor_spl::{
   associated_token::AssociatedToken,
   token::{Token, TokenAccount},
 };
+use pumpfun_sdk::cpi::{sell, accounts::Sell};
 
 use crate::{
   constants::CAMPAIGN_SEED,
@@ -95,12 +96,13 @@ pub fn sell_campaign_token(ctx: Context<SellCampaignToken>, mint_sol_output: u64
   let bump_seed = campaign_account.bump;
   let creator_bytes = campaign_account.creator.as_ref();
   let index_bytes = campaign_account.index.to_le_bytes();
+  let signer_seeds: &[&[&[u8]]] = &[&[CAMPAIGN_SEED, creator_bytes, &index_bytes, &[bump_seed]]];
 
   //pump.fun sell token cpi
   let cpi_context = CpiContext::new(
     pump_fun_program_id,
     Sell {
-      global: &ctx.accounts.pump_fun_global.to_account_info(),
+      global: ctx.accounts.pump_fun_global.to_account_info(),
       fee_recipient: ctx.accounts.pump_fun_fee_recipient.to_account_info(),
         mint: ctx.accounts.mint.to_account_info(),
         bonding_curve: ctx.accounts.pump_fun_bonding_curve.to_account_info(),

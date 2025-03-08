@@ -13,10 +13,7 @@ pub use instructions::*;
 
 #[program]
 pub mod final_project {
-
-    use events::CreatedCampaignEvent;
-
-    use super::*;
+     use super::*;
 
     pub fn initialize(
         ctx: Context<Init>,
@@ -68,11 +65,11 @@ pub mod final_project {
     }
 
     pub fn claim_fund(ctx: Context<ClaimFundRaised>) -> Result<()> {
-        instructions::claim_fund(ctx)
+        instructions::claim_fund_raised(ctx)
     }
 
     pub fn create_token(
-        ctx: Context<CreatedCampaignToken>, slippage: u16
+        ctx: Context<CreateCampaignToken>, slippage: u16
     ) -> Result<()> {
         instructions::create_campaign_token(ctx, slippage)
     }
@@ -88,5 +85,48 @@ pub mod final_project {
         mint_sol_output: u64,
     ) -> Result<()> {
         instructions::sell_campaign_token(ctx, mint_sol_output)
+    }
+
+    pub fn update_claimable_token(
+        ctx: Context<UpdateClaimableTokenAmount>,
+        amount: u64,
+    ) -> Result<()> {
+        instructions::update_claimable_token_amount(ctx, amount)
+    }
+
+    pub fn set_admin(
+        ctx: Context<UpdateAdmin>,
+        new_admin: Pubkey,
+    ) -> Result<()> {
+        instructions::update_admin(ctx, new_admin)
+    }
+
+    pub fn set_operator(
+        ctx: Context<UpdateOperator>,
+        new_operator: Pubkey,
+    ) -> Result<()> {
+        instructions::update_operator(ctx, new_operator)
+    }
+
+    pub fn set_fee(
+        ctx: Context<UpdateFee>,
+        new_protocol_fee_percentage: u16,
+        new_tip_percentage: u16,
+    ) -> Result<()> {
+        instructions::update_fee(ctx, new_protocol_fee_percentage, new_tip_percentage)
+    }
+
+    pub fn withdraw_fee(
+        ctx: Context<WithdrawSolFee>,
+        amount: u64,
+    ) -> Result<()> {
+        instructions::withdraw_sol_fee(ctx, amount)
+    }
+
+    pub fn withdraw_token(
+        ctx: Context<WithdrawCampaignToken>,
+        amount: u64,
+    ) -> Result<()> {
+        instructions::withdraw_campaign_token(ctx, amount)
     }
 }

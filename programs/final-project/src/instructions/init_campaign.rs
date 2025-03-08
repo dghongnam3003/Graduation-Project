@@ -15,7 +15,6 @@ pub struct InitCampaign<'info> {
   pub creator: Signer<'info>,
 
   #[account(
-    mut,
     seeds = [CONFIG_SEED],
     bump = config.bump,
   )]
