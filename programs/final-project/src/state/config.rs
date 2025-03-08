@@ -10,7 +10,7 @@ pub struct Config {
   pub admin: Pubkey,
   pub operator: Pubkey,
   pub initial_deposit_amount: u64,
-  pub protocal_fee_percentage: u16,
+  pub protocol_fee_percentage: u16,
   pub tip_percentage: u16, // Tip percentage for operations
 }
 

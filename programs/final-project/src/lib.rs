@@ -14,6 +14,8 @@ pub use instructions::*;
 #[program]
 pub mod final_project {
 
+    use events::CreatedCampaignEvent;
+
     use super::*;
 
     pub fn initialize(
@@ -67,5 +69,17 @@ pub mod final_project {
 
     pub fn claim_fund(ctx: Context<ClaimFundRaised>) -> Result<()> {
         instructions::claim_fund(ctx)
+    }
+
+    pub fn create_token(
+        ctx: Context<CreatedCampaignToken>, slippage: u16
+    ) -> Result<()> {
+        instructions::create_campaign_token(ctx, slippage)
+    }
+
+    pub fn claim_token(
+        ctx: Context<ClaimCampaignToken>,
+    ) -> Result<()> {
+        instructions::claim_campaign_token(ctx)
     }
 }

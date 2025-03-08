@@ -39,7 +39,7 @@ pub fn init(
   bump: u8,
   treasury_bump: u8,
   operator: Pubkey,
-  protocal_fee_percentage: u16,
+  protocol_fee_percentage: u16,
   tip_percentage: u16,
 ) -> Result<()> {
   let config = &mut ctx.accounts.config;
@@ -48,7 +48,7 @@ pub fn init(
     bump,
     *ctx.accounts.admin.key,
     operator,
-    protocal_fee_percentage,
+    protocol_fee_percentage,
     tip_percentage,
   )?;
   treasury.init(treasury_bump)

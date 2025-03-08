@@ -27,3 +27,22 @@ pub struct DonatedFundEvent {
   pub donated_amount: u64,
   pub timestamp: i64,
 }
+
+#[event]
+pub struct CreatedCampaignTokenEvent {
+  pub creator: Pubkey,
+  pub campaign_index: u64,
+  pub mint: Pubkey,
+  pub bought_amount: u64,
+  pub timestamp: i64,
+}
+
+#[event]
+pub struct ClaimedTokenEvent {
+  pub creator: Pubkey,
+  pub campaign_index: u64,
+  pub claimed_amount: u64,
+  pub mint: Pubkey,
+  pub timestamp: i64,
+}
+

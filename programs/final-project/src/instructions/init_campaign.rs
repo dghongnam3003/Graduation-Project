@@ -102,6 +102,7 @@ pub fn init_campaign(
     uri,
     deposit_deadline,
     trade_deadline,
+    donation_goal,
     timestamp: now,
   });
 

@@ -8,11 +8,11 @@ pub enum CustomError {
   #[msg("Invalid protocol fee percentage")]
   InvalidProtocolFeePercentage,
 
-  #[msg("Campaign reached goal")]
-  CampaignReachedGoal,
+  #[msg("Invalid tip percentage")]
+  InvalidTipPercentage,
 
-  #[msg("Campaign deposit deadline has passed")]
-  CampaignDepositDeadlinePassed,
+  #[msg("Operator is the same")]
+  OperatorIsSame,
 
   #[msg("Deposit deadline must be in the future")]
   DepositDeadlineMustBeInTheFuture,
