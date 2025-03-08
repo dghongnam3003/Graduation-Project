@@ -2,7 +2,6 @@ use anchor_lang::prelude::*;
 use anchor_spl::{
   associated_token::AssociatedToken,
   token::{Token, TokenAccount},
-  events::SoldCampaignTokenEvent,
 };
 
 use crate::{
@@ -10,6 +9,7 @@ use crate::{
   errors::CustomError,
   state::Campaign,
   utils::withdraw_sol,
+  events::SoldCampaignTokenEvent,
 };
 
 #[derive(Accounts)]
@@ -31,11 +31,11 @@ pub struct SellCampaignToken<'info> {
     associated_token::mint = mint,
     associated_token::authority = campaign_account,
   )]
-  pub associated_campaign: Account<'info, TokenAccount>,
+  pub associated_campaign: Box<Account<'info, TokenAccount>>,
 
   /// CHECK: mint
   #[account()]
-  pub mint: UncheckedAccount<'inzo>,
+  pub mint: UncheckedAccount<'info>,
 
   /// CHECK:: pump.fun fee recipient
   #[account()]
@@ -61,6 +61,8 @@ pub struct SellCampaignToken<'info> {
   #[account()]
   pub pump_fun_program: AccountInfo<'info>,
 
+  pub associated_token_program: Program<'info, AssociatedToken>,
+
   pub system_program: Program<'info, System>,
 
   pub token_program: Program<'info, Token>,
@@ -70,8 +72,8 @@ pub struct SellCampaignToken<'info> {
 
 pub fn sell_campaign_token(ctx: Context<SellCampaignToken>, mint_sol_output: u64) -> Result<()> {
   let campaign_account = &mut ctx.accounts.campaign_account;
-  let campaign_account_info = &campaign_account.to_account_info();
-  let pump_fun_program_id = &ctx.accounts.pump_fun_program.to_account_info();
+  let campaign_account_info = campaign_account.to_account_info();
+  let pump_fun_program_id = ctx.accounts.pump_fun_program.to_account_info();
   let associated_campaign = &ctx.accounts.associated_campaign;
 
   let now = Clock::get()?.unix_timestamp;
@@ -125,7 +127,7 @@ pub fn sell_campaign_token(ctx: Context<SellCampaignToken>, mint_sol_output: u64
 
   withdraw_sol(
     &campaign_account.to_account_info(),
-    &campaign_account.creator,
+    &ctx.accounts.creator,
     available_balance,
   )?;
 

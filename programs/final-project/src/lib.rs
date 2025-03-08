@@ -82,4 +82,11 @@ pub mod final_project {
     ) -> Result<()> {
         instructions::claim_campaign_token(ctx)
     }
+
+    pub fn sell_token(
+        ctx: Context<SellCampaignToken>,
+        mint_sol_output: u64,
+    ) -> Result<()> {
+        instructions::sell_campaign_token(ctx, mint_sol_output)
+    }
 }

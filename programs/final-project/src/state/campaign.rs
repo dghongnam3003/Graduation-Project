@@ -87,6 +87,12 @@ impl Campaign {
     Ok(())
   }
 
+  pub fn sell_all_token(&mut self) -> Result<()> {
+    self.is_sell_all = true;
+
+    Ok(())
+  }
+
   pub fn buy_token(&mut self, amount: u64) -> Result<()> {
     self.total_token_bought = self.total_token_bought.checked_add(amount).unwrap();
 
