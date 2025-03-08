@@ -46,3 +46,10 @@ pub struct ClaimedTokenEvent {
   pub timestamp: i64,
 }
 
+#[event]
+pub struct SoldCampaignTokenEvent {
+  pub creator: Pubkey,
+  pub campaign_index: u64,
+  pub mint: Pubkey,
+  pub timestamp: i64,
+}
