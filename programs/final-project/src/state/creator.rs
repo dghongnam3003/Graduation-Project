@@ -15,7 +15,7 @@ impl Creator {
     pub fn init(&mut self, bump: u8, creator: Pubkey) -> Result<()> {
         self.bump = bump;
         self.creator = creator;
-        self.last_campaign_index = 0;
+        self.last_campaign_index = 1;
 
         Ok(())
     }
