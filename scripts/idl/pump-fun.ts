@@ -231,10 +231,6 @@ export type PumpFun = {
         {
           name: "uri";
           type: "string";
-        },
-        {
-          name: "creator";
-          type: "pubkey";
         }
       ];
     },
