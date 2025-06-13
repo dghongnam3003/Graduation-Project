@@ -26,8 +26,8 @@ async function createCampaignToken() {
   const program = new Program(IDL, provider);
   const pumpFunProgram = new Program(PumpFunIDL, provider);
 
-  const creatorAddress = new PublicKey("E7348VKp7Rxw32y2YAjpjQdtKgBb6H7gnetkk9fb8gPu"); // REPLACE WITH CREATOR ADDRESS
-  const campaignIndex = new BN(4); // REPLACE WITH CAMPAIGN INDEX
+  const creatorAddress = new PublicKey("HDSqe2F7AVkCdyKaX66EjQRQCd27n5FTsFjWgGEvjiTh"); // REPLACE WITH CREATOR ADDRESS
+  const campaignIndex = new BN(2); // REPLACE WITH CAMPAIGN INDEX
   const slippage = 200;
 
   const pumpFunGlobal = new PublicKey("4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf");
@@ -36,8 +36,10 @@ async function createCampaignToken() {
     : new PublicKey("CebN5WGQ4jvEPvsVU4EoHEpgzq1VV7AbicfhtW4xC9iM");
   const pumpFunMintAuthority = new PublicKey("TSLvdd1pWpHVjahSpsvCXUbgwsL3JAcvokwaKt1eokM")
   const pumpFunEventAuthority = new PublicKey("Ce6TQqeHC9p8KetsN6JsjHK7UTZk7nasjjnr7XxXp9F1");
+  // const creatorVault = new PublicKey("8FBaHXCfu8vSuFMdzJLsXts1UE6pZV3j86FYa18cptES"); // REPLACE WITH CREATOR VAULT ADDRESS
 
   const tx = new Transaction();
+  
 
   const [config,] = PublicKey.findProgramAddressSync(
     [Buffer.from("config")],
@@ -54,8 +56,17 @@ async function createCampaignToken() {
     program.programId
   );
 
+  const [creator,] = PublicKey.findProgramAddressSync(
+    [Buffer.from("creator"), keyPair.publicKey.toBuffer()],
+    program.programId
+  );
+  console.log("🚀 ~ createCampaignToken ~ campaign:", campaign.toBase58())
+
+  
+
   const mintKeypair = Keypair.generate();
   const mint = mintKeypair.publicKey;
+
   console.log("🚀 ~ createCampaignToken ~ mint:", mint.toBase58())
   const [bondingCurve] = PublicKey.findProgramAddressSync(
     [
@@ -85,7 +96,7 @@ async function createCampaignToken() {
     pumpFunEventAuthority,
     pumpFunProgram: pumpFunProgram.programId,
     metadata,
-    mplTokenMetadata: MPL_TOKEN_METADATA_PROGRAM_ID
+    metaplexMetadataProgram: MPL_TOKEN_METADATA_PROGRAM_ID
   }
   tx.add(await program.methods.createToken(slippage).accounts(createTokenAccounts).instruction());
 
@@ -100,42 +111,46 @@ async function createCampaignToken() {
   console.log("🚀 ~ createCampaignToken ~ maxSolCost:", maxSolCost.toString())
   let tokenAmount = calcOutTokenAmount(maxSolCost, slippage);
 
-  tx.add(
-    createAssociatedTokenAccountInstruction(
-      keyPair.publicKey,
-      associatedSigner,
-      keyPair.publicKey,
-      mint,
-    )
-  );
-  const pumpFunBuyTokenAccounts = {
-    global: pumpFunGlobal,
-    feeRecipient: pumpFunFeeRecipient,
-    mint: mint,
-    bondingCurve: bondingCurve,
-    associatedBondingCurve: associatedBondingCurve,
-    associatedUser: associatedSigner,
-    user: keyPair.publicKey,
-    eventAuthority: pumpFunEventAuthority,
-    program: pumpFunProgram.programId,
-  }
-  tx.add(await pumpFunProgram.methods.buy(tokenAmount, maxSolCost).accounts(pumpFunBuyTokenAccounts).instruction());
+  // Comment out buy logic temporarily to test token creation only
+  // tx.add(
+  //   createAssociatedTokenAccountInstruction(
+  //     keyPair.publicKey,
+  //     associatedSigner,
+  //     keyPair.publicKey,
+  //     mint,
+  //   )
+  // );
+  // const pumpFunBuyTokenAccounts = {
+  //   global: pumpFunGlobal,
+  //   feeRecipient: pumpFunFeeRecipient,
+  //   mint: mint,
+  //   bondingCurve: bondingCurve,
+  //   associatedBondingCurve: associatedBondingCurve,
+  //   associatedUser: associatedSigner,
+  //   user: keyPair.publicKey,
+  //   systemProgram: "11111111111111111111111111111111",
+  //   tokenProgram: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  //   rent: "SysvarRent111111111111111111111111111111111",
+  //   eventAuthority: pumpFunEventAuthority,
+  //   program: pumpFunProgram.programId,
+  // }
+  // tx.add(await pumpFunProgram.methods.buy(tokenAmount, maxSolCost).accounts(pumpFunBuyTokenAccounts).instruction());
 
-  // Deposit token to campaign
-  tx.add(
-    createAssociatedTokenAccountInstruction(
-      keyPair.publicKey,
-      associatedCampaign,
-      campaign,
-      mint,
-    )
-  )
-  tx.add(createTransferInstruction(
-    associatedSigner,
-    associatedCampaign,
-    keyPair.publicKey,
-    BigInt(tokenAmount.toString()),
-  ))
+  // // Deposit token to campaign
+  // tx.add(
+  //   createAssociatedTokenAccountInstruction(
+  //     keyPair.publicKey,
+  //     associatedCampaign,
+  //     campaign,
+  //     mint,
+  //   )
+  // )
+  // tx.add(createTransferInstruction(
+  //   associatedSigner,
+  //   associatedCampaign,
+  //   keyPair.publicKey,
+  //   BigInt(tokenAmount.toString()),
+  // ))
 
   tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
   tx.feePayer = keyPair.publicKey;

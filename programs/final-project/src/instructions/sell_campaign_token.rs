@@ -3,7 +3,7 @@ use anchor_spl::{
   associated_token::AssociatedToken,
   token::{Token, TokenAccount},
 };
-use pumpfun_sdk::cpi::{sell, accounts::Sell};
+use pumpdotfunn_sdk::cpi::{sell, accounts::Sell};
 
 use crate::{
   constants::CAMPAIGN_SEED,

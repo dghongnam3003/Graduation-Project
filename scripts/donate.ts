@@ -15,9 +15,9 @@ async function donateFund() {
   const program = new Program(IDL, provider);
 
   const tx = new Transaction();
-  const creatorAddress = new PublicKey(keyPair.publicKey); // REPLACE WITH CREATOR ADDRESS
-  const campaignIndex = new BN(0); // REPLACE WITH CAMPAIGN INDEX
-  const amount = new BN(1 * LAMPORTS_PER_SOL); // 1 SOL
+  const creatorAddress = new PublicKey("HDSqe2F7AVkCdyKaX66EjQRQCd27n5FTsFjWgGEvjiTh"); // REPLACE WITH CREATOR ADDRESS
+  const campaignIndex = new BN(2); // REPLACE WITH CAMPAIGN INDEX
+  const amount = new BN(0.3 * LAMPORTS_PER_SOL); // 1 SOL
 
   tx.add(await program.methods.donate(
     creatorAddress,

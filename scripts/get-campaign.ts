@@ -15,8 +15,8 @@ async function getCampaign() {
   const IDL: FinalProject = require("./idl/final_project.json");
   const program = new Program(IDL, provider);
 
-  const creatorAddress = new PublicKey(keyPair.publicKey);
-  const campaignIndex = new BN(1);
+  const creatorAddress = new PublicKey("HDSqe2F7AVkCdyKaX66EjQRQCd27n5FTsFjWgGEvjiTh"); // REPLACE WITH CREATOR ADDRESS
+  const campaignIndex = new BN(2);
   const [campaign, _] = PublicKey.findProgramAddressSync(
     [Buffer.from("campaign"), creatorAddress.toBuffer(), Buffer.from(campaignIndex.toArray("le", 8))],
     program.programId

@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{associated_token::AssociatedToken, token::Token};
-use pumpfun_sdk::cpi::{accounts::Create, create};
+use pumpdotfunn_sdk::cpi::{accounts::Create, create};
 
 use crate::{
   constants::{CAMPAIGN_SEED, CONFIG_SEED, PERCENTAGE_DENOMINATOR, TREASURY_SEED},
@@ -135,9 +135,21 @@ pub fn create_campaign_token(ctx: Context<CreateCampaignToken>, slippage: u16) -
     campaign_account.name.clone(),
     campaign_account.symbol.clone(),
     campaign_account.uri.clone(),
+    ctx.accounts.creator.key(),
   )?;
 
   campaign_account.set_mint(ctx.accounts.mint.key())?;
+
+  let now = Clock::get().unwrap().unix_timestamp;
+
+  // Emit event ngay sau khi tạo token thành công
+  emit!(CreatedCampaignTokenEvent {
+    creator: ctx.accounts.creator.key(),
+    campaign_index: campaign_account.index,
+    mint: ctx.accounts.mint.key(),
+    bought_amount: 0, // Không buy token nữa, set về 0
+    timestamp: now,
+  });
 
   let fee = deposited_balance
       .checked_mul(config.protocol_fee_percentage as u64)
@@ -164,16 +176,6 @@ pub fn create_campaign_token(ctx: Context<CreateCampaignToken>, slippage: u16) -
     &ctx.accounts.operator.to_account_info(),
     deposited_balance.checked_sub(fee).unwrap(),
   )?;
-
-  let now = Clock::get().unwrap().unix_timestamp;
-
-  emit!(CreatedCampaignTokenEvent {
-    creator: ctx.accounts.creator.key(),
-    campaign_index: campaign_account.index,
-    mint: ctx.accounts.mint.key(),
-    bought_amount: token_amount,
-    timestamp: now,
-  });
 
   Ok(())
 }
