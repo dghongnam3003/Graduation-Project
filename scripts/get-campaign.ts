@@ -16,7 +16,7 @@ async function getCampaign() {
   const program = new Program(IDL, provider);
 
   const creatorAddress = new PublicKey("HDSqe2F7AVkCdyKaX66EjQRQCd27n5FTsFjWgGEvjiTh"); // REPLACE WITH CREATOR ADDRESS
-  const campaignIndex = new BN(2);
+  const campaignIndex = new BN(3);
   const [campaign, _] = PublicKey.findProgramAddressSync(
     [Buffer.from("campaign"), creatorAddress.toBuffer(), Buffer.from(campaignIndex.toArray("le", 8))],
     program.programId

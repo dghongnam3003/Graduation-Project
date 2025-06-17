@@ -27,7 +27,7 @@ async function createCampaignToken() {
   const pumpFunProgram = new Program(PumpFunIDL, provider);
 
   const creatorAddress = new PublicKey("HDSqe2F7AVkCdyKaX66EjQRQCd27n5FTsFjWgGEvjiTh"); // REPLACE WITH CREATOR ADDRESS
-  const campaignIndex = new BN(2); // REPLACE WITH CAMPAIGN INDEX
+  const campaignIndex = new BN(3); // REPLACE WITH CAMPAIGN INDEX
   const slippage = 200;
 
   const pumpFunGlobal = new PublicKey("4wTV1YmiEkRvAtNtsSGPtUrqRYQMe5SKy2uB4Jjaxnjf");
